@@ -8,10 +8,10 @@ import com.likelion.likelionassignmentcrud.common.code.ErrorCode;
 import com.likelion.likelionassignmentcrud.common.exception.BusinessException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +32,11 @@ public class StudentService {
     }
 
 
-    public List<StudentResponse> getAllStudents() {
-        return studentRepository.findAll().stream()
-                .map(StudentResponse::new)
-                .collect(Collectors.toList());
+    public Page<StudentResponse> getAllStudents(Pageable pageable) {
+        return studentRepository.findAll(pageable)
+                .map(StudentResponse::new);
     }
+
 
     public StudentResponse getStudent(Long id) {
         Student student = studentRepository.findById(id)

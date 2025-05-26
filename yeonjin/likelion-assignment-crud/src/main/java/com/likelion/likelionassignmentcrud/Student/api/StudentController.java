@@ -7,9 +7,11 @@ import com.likelion.likelionassignmentcrud.common.code.SuccessCode;
 import com.likelion.likelionassignmentcrud.common.tempiate.ApiResTemplate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +29,9 @@ public class StudentController {
 
     // 전체 학생 조회
     @GetMapping
-    public ApiResTemplate<List<StudentResponse>> getAllStudents() {
-        List<StudentResponse> responseList = studentService.getAllStudents();
+    public ApiResTemplate<Page<StudentResponse>> getAllStudents(
+            @PageableDefault(size = 5) Pageable pageable) {
+        Page<StudentResponse> responseList = studentService.getAllStudents(pageable);
         return ApiResTemplate.successResponse(SuccessCode.STUDENT_GET_SUCCESS, responseList);
     }
 

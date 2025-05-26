@@ -7,9 +7,10 @@ import com.likelion.likelionassignmentcrud.common.code.SuccessCode;
 import com.likelion.likelionassignmentcrud.common.tempiate.ApiResTemplate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,17 +20,18 @@ public class AssignmentController {
     private final AssignmentService assignmentService;
 
     // 과제 등록
-    @PostMapping("/save")
+    @PostMapping
     public ApiResTemplate<String> createAssignment(@Valid @RequestBody AssignmentRequest request) {
         assignmentService.createAssignment(request);
         return ApiResTemplate.successWithNoContent(SuccessCode.ASSIGNMENT_CREATE_SUCCESS);
     }
 
     // 전체 과제 조회
-    @GetMapping("/all")
-    public ApiResTemplate<List<AssignmentResponse>> getAllAssignments() {
-        List<AssignmentResponse> assignments = assignmentService.getAllAssignments();
-        return ApiResTemplate.successResponse(SuccessCode.ASSIGNMENT_GET_SUCCESS, assignments);
+    @GetMapping
+    public ApiResTemplate<Page<AssignmentResponse>> getAllAssignments(
+            @PageableDefault(size = 5) Pageable pageable) {
+        Page<AssignmentResponse> responseList = assignmentService.getAllAssignments(pageable);
+        return ApiResTemplate.successResponse(SuccessCode.ASSIGNMENT_GET_SUCCESS, responseList);
     }
 
     // 특정 과제 조회

@@ -10,10 +10,9 @@ import com.likelion.likelionassignmentcrud.common.code.ErrorCode;
 import com.likelion.likelionassignmentcrud.common.exception.BusinessException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,10 +35,10 @@ public class AssignmentService {
         return new AssignmentResponse(assignmentRepository.save(assignment));
     }
 
-    public List<AssignmentResponse> getAllAssignments() {
-        return assignmentRepository.findAll().stream()
-                .map(AssignmentResponse::new)
-                .collect(Collectors.toList());
+    //페이지네이션 적용
+    public Page<AssignmentResponse> getAllAssignments(Pageable pageable) {
+        return assignmentRepository.findAll(pageable)
+                .map(AssignmentResponse::new);
     }
 
     public AssignmentResponse getAssignment(Long id) {
